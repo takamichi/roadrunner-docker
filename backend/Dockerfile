@@ -3,7 +3,7 @@ FROM php:7.3-cli-alpine
 RUN set -xe; \
     apk add --update --no-cache ca-certificates tzdata;
 
-ENV RR_VERSION 1.4.0
+ENV RR_VERSION 1.4.1
 RUN : "Install RoadRunner ..."; \
     mkdir -p /tmp/roadrunner; \
     curl \
