@@ -1,0 +1,21 @@
+{
+  "name": "takamichi/r2",
+  "description": "RoadRunner",
+  "type": "project",
+  "authors": [
+    {
+      "name": "Takamichi Urata",
+      "email": "taka@seraphimis.net"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^7.3.5",
+    "spiral/roadrunner": "^1.4"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  }
+}
