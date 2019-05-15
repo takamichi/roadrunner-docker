@@ -78,3 +78,10 @@ RUN : "Install PHP extensions ..."; \
     : "Report"; \
     php -v; \
     php -i;
+
+WORKDIR /var/www/html
+
+ENTRYPOINT ["/usr/local/bin/rr"]
+CMD ["serve", "-d", "-c", "/var/www/html/.rr.yml"]
+
+EXPOSE 80

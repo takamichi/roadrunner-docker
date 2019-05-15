@@ -1,0 +1,6 @@
+http:
+  address: :80
+  workers:
+    command: "php /var/www/html/worker.php"
+    pool:
+      numWorkers: 4
