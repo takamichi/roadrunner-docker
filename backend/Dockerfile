@@ -3,17 +3,6 @@ FROM php:7.3-cli-alpine
 RUN set -xe; \
     apk add --update --no-cache ca-certificates tzdata;
 
-ENV RR_VERSION 1.4.2
-RUN : "Install RoadRunner ..."; \
-    mkdir -p /tmp/roadrunner; \
-    curl \
-        -L https://github.com/spiral/roadrunner/releases/download/v${RR_VERSION}/roadrunner-${RR_VERSION}-linux-amd64.tar.gz \
-        -o /tmp/roadrunner/roadrunner.tar.gz; \
-    tar -oxxf /tmp/roadrunner/roadrunner.tar.gz -C "/tmp/roadrunner" --strip-components=1; \
-    mv /tmp/roadrunner/rr /usr/local/bin/rr; \
-    chmod u=rwx,g=rx,o=rx /usr/local/bin/rr; \
-    rm -rf /tmp/roadrunner;
-
 RUN : "Install PHP extensions ..."; \
     apk add --update --no-cache -t .php-rundeps \
         bzip2 \
@@ -78,6 +67,17 @@ RUN : "Install PHP extensions ..."; \
     : "Report"; \
     php -v; \
     php -i;
+
+ENV RR_VERSION 1.4.2
+RUN : "Install RoadRunner ..."; \
+    mkdir -p /tmp/roadrunner; \
+    curl \
+        -L https://github.com/spiral/roadrunner/releases/download/v${RR_VERSION}/roadrunner-${RR_VERSION}-linux-amd64.tar.gz \
+        -o /tmp/roadrunner/roadrunner.tar.gz; \
+    tar -oxxf /tmp/roadrunner/roadrunner.tar.gz -C "/tmp/roadrunner" --strip-components=1; \
+    mv /tmp/roadrunner/rr /usr/local/bin/rr; \
+    chmod u=rwx,g=rx,o=rx /usr/local/bin/rr; \
+    rm -rf /tmp/roadrunner;
 
 WORKDIR /var/www/html
 
