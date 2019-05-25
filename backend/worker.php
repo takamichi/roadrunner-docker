@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/vendor/autoload.php';
 
-(function () {
+(static function () {
     $psr7 = new Spiral\RoadRunner\PSR7Client(
         new Spiral\RoadRunner\Worker(new Spiral\Goridge\StreamRelay(STDIN, STDOUT))
     );
