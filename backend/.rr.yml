@@ -4,3 +4,6 @@ http:
     command: "php /var/www/html/worker.php"
     pool:
       numWorkers: 4
+static:
+  dir: "/var/www/html/public"
+  forbid: [".php", ".htaccess"]
