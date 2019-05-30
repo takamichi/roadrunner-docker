@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    #image:
+    expose:
+      - "80"
+    ports:
+      - "80:80"
+    environment:
+      TZ: "Asia/Tokyo"
+      PHP_XDEBUG_REMOTE_HOST: "host.docker.internal"
+      #PHP_IDE_CONFIG: "serverName="
+    volumes:
+      - ./backend:/var/www/html:cached
+      - ./environment/dev/php-xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
+    networks:
+      web:
+
+  composer:
+    image: composer:latest
+    environment:
+      COMPOSER_HOME: '/composer'
+    entrypoint: /usr/local/bin/composer.sh
+    command: 'install --ignore-platform-reqs --no-interaction --no-scripts --prefer-dist'
+    working_dir: /var/www/html
+    volumes:
+      - ./devtools/composer/composer.sh:/usr/local/bin/composer.sh:ro
+      - ./backend:/var/www/html
+      - cache-composer:/composer
+
+networks:
+  web:
+    driver: bridge
+
+volumes:
+  cache-composer:
+    driver: local
