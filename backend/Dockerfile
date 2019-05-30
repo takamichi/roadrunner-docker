@@ -1,3 +1,37 @@
+# syntax = docker/dockerfile:1.0-experimental
+
+FROM composer:latest AS composer
+
+ENV APP_ROOT="/var/www/html"
+
+COPY composer.json composer.lock ${APP_ROOT}/
+
+WORKDIR ${APP_ROOT}
+RUN --mount=type=cache,target=/tmp/cache \
+    set -xe; \
+    : "Validate composer.json ..."; \
+    composer validate --working-dir=${APP_ROOT} --strict --no-check-publish --no-interaction; \
+    : "Install dependency packages ..."; \
+    composer install \
+        --working-dir=${APP_ROOT} \
+        --ignore-platform-reqs \
+        --no-dev \
+        --no-interaction \
+        --no-progress \
+        --no-scripts \
+        --optimize-autoloader \
+        --prefer-dist;
+
+RUN ./vendor/bin/rr get-binary --location=/usr/local/bin
+
+#COPY config ${APP_ROOT}/config
+COPY public ${APP_ROOT}/public
+#COPY src ${APP_ROOT}/src
+#COPY storage ${APP_ROOT}/storage
+
+VOLUME ["/tmp"]
+
+
 FROM php:7.3-cli-alpine
 
 RUN set -xe; \
@@ -52,7 +86,7 @@ RUN : "Install PHP extensions ..."; \
     docker-php-ext-enable \
         redis; \
     \
-    : "Cleanup"; \
+    : "Cleanup ..."; \
     docker-php-source delete; \
     apk del --purge .build-deps; \
     pecl clear-cache; \
@@ -68,18 +102,9 @@ RUN : "Install PHP extensions ..."; \
     php -v; \
     php -i;
 
-ENV RR_VERSION 1.4.2
-RUN : "Install RoadRunner ..."; \
-    mkdir -p /tmp/roadrunner; \
-    curl \
-        -L https://github.com/spiral/roadrunner/releases/download/v${RR_VERSION}/roadrunner-${RR_VERSION}-linux-amd64.tar.gz \
-        -o /tmp/roadrunner/roadrunner.tar.gz; \
-    tar -oxxf /tmp/roadrunner/roadrunner.tar.gz -C "/tmp/roadrunner" --strip-components=1; \
-    mv /tmp/roadrunner/rr /usr/local/bin/rr; \
-    chmod u=rwx,g=rx,o=rx /usr/local/bin/rr; \
-    rm -rf /tmp/roadrunner;
-
 WORKDIR /var/www/html
+
+COPY --from=composer /usr/local/bin/rr /usr/local/bin/rr
 
 ENTRYPOINT ["/usr/local/bin/rr"]
 CMD ["serve", "-d", "-c", "/var/www/html/.rr.yml"]
