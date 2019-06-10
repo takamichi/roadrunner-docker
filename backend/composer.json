@@ -2,6 +2,7 @@
   "name": "takamichi/r2",
   "description": "RoadRunner",
   "type": "project",
+  "license": "MIT",
   "authors": [
     {
       "name": "Takamichi Urata",
