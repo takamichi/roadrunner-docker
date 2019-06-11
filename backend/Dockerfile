@@ -102,11 +102,12 @@ RUN : "Install PHP extensions ..."; \
     php -v; \
     php -i;
 
-WORKDIR /var/www/html
-
 COPY --from=composer /usr/local/bin/rr /usr/local/bin/rr
 
+ENV APP_ROOT="/var/www/html"
+WORKDIR ${APP_ROOT}
+
 ENTRYPOINT ["/usr/local/bin/rr"]
-CMD ["serve", "-d", "-c", "/var/www/html/.rr.yml"]
+CMD ["serve", "-d"]
 
 EXPOSE 80
