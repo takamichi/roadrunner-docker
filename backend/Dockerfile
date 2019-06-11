@@ -35,7 +35,7 @@ VOLUME ["/tmp"]
 FROM php:7.3-cli-alpine
 
 RUN set -xe; \
-    apk add --update --no-cache ca-certificates tzdata;
+    apk add --update --no-cache ca-certificates inotify-tools tzdata;
 
 RUN : "Install PHP extensions ..."; \
     apk add --update --no-cache -t .php-rundeps \
