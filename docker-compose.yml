@@ -33,10 +33,24 @@ services:
       - ./backend:/var/www/html
       - cache-composer:/composer
 
+  php-cs-fixer:
+    image: composer:latest
+    environment:
+      COMPOSER_HOME: '/composer'
+    entrypoint: /usr/local/bin/php-cs-fixer.sh
+    command: 'fix --dry-run -vv'
+    working_dir: /var/www/html
+    volumes:
+      - ./devtools/php-cs-fixer/php-cs-fixer.sh:/usr/local/bin/php-cs-fixer.sh:ro
+      - ./backend:/var/www/html
+      - cache-php-cs-fixer:/composer
+
 networks:
   web:
     driver: bridge
 
 volumes:
   cache-composer:
+    driver: local
+  cache-php-cs-fixer:
     driver: local
