@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 require __DIR__ . '/vendor/autoload.php';
 
-(static function () {
+(static function (): void {
     $psr7 = new Spiral\RoadRunner\PSR7Client(
-        new Spiral\RoadRunner\Worker(new Spiral\Goridge\StreamRelay(STDIN, STDOUT))
+        new Spiral\RoadRunner\Worker(new Spiral\Goridge\StreamRelay(\STDIN, \STDOUT))
     );
 
     while ($request = $psr7->acceptRequest()) {
