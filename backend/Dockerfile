@@ -107,6 +107,10 @@ COPY --from=composer /usr/local/bin/rr /usr/local/bin/rr
 ENV APP_ROOT="/var/www/html"
 WORKDIR ${APP_ROOT}
 
+RUN set -xe; \
+    : "Create rr-watch symlink..."; \
+    ln -sfn "${APP_ROOT}/bin/watch.sh" /usr/local/bin/rr-watch;
+
 ENTRYPOINT ["/usr/local/bin/rr"]
 CMD ["serve", "-d"]
 
