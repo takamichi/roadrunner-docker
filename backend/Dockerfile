@@ -32,7 +32,7 @@ COPY public ${APP_ROOT}/public
 VOLUME ["/tmp"]
 
 
-FROM php:7.3-cli-alpine
+FROM php:7.3-cli-alpine3.10
 
 RUN set -xe; \
     apk add --update --no-cache ca-certificates inotify-tools tzdata;
