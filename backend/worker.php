@@ -5,8 +5,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 (static function (): void {
     $worker = new Spiral\RoadRunner\Worker(new Spiral\Goridge\StreamRelay(\STDIN, \STDOUT));
-    $psr17 = new Nyholm\Psr7\Factory\Psr17Factory();
-    $psr7 = new Spiral\RoadRunner\PSR7Client($worker, $psr17, $psr17, $psr17);
+    $psr17Factories = new Nyholm\Psr7\Factory\Psr17Factory();
+    $psr7Client = new Spiral\RoadRunner\PSR7Client($worker, $psr17Factories, $psr17Factories, $psr17Factories);
 
     // Load .env file
     try {
@@ -17,14 +17,14 @@ require __DIR__ . '/vendor/autoload.php';
         return;
     }
 
-    while ($request = $psr7->acceptRequest()) {
+    while ($request = $psr7Client->acceptRequest()) {
         try {
-            $response = $psr17->createResponse();
+            $response = $psr17Factories->createResponse();
             $response->getBody()->write('Hello RoadRunner !');
 
-            $psr7->respond($response);
+            $psr7Client->respond($response);
         } catch (Throwable $e) {
-            $psr7->getWorker()->error((string)$e);
+            $psr7Client->getWorker()->error((string)$e);
         }
     }
 })();
